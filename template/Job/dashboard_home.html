@@ -1,0 +1,100 @@
+{% extends 'Job/jobpagebase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Welcome Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h1 class="text-2xl font-bold mb-4">Welcome back, {{ request.user.first_name }}!</h1>
+        <p class="text-gray-600">Here's your job search overview</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Job Applications Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Your Applications</h2>
+                <a href="{% url 'dashboard:my_applications' %}" class="text-yellow-500 hover:text-yellow-600">View All</a>
+            </div>
+            
+            {% if applications %}
+                <div class="space-y-4">
+                    {% for application in applications|slice:":3" %}
+                        <div class="border-b border-gray-200 pb-4">
+                            <h3 class="font-semibold">{{ application.job.title }}</h3>
+                            <p class="text-gray-600">{{ application.job.company }}</p>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-sm text-gray-500">Applied: {{ application.applied_at|date:"M d, Y" }}</span>
+                                <span class="px-3 py-1 rounded-full text-sm 
+                                    {% if application.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif application.status == 'accepted' %}bg-green-100 text-green-800
+                                    {% elif application.status == 'rejected' %}bg-red-100 text-red-800
+                                    {% endif %}">
+                                    {{ application.status|title }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-500">You haven't applied to any jobs yet.</p>
+                    <a href="{% url 'dashboard:job_search' %}" class="mt-4 inline-block bg-yellow-400 text-black px-6 py-2 rounded-lg hover:bg-yellow-500">Start Applying</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recommended Jobs Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Recommended for You</h2>
+                <a href="{% url 'dashboard:job_search' %}" class="text-yellow-500 hover:text-yellow-600">View All</a>
+            </div>
+
+            {% if recommended_jobs %}
+                <div class="space-y-4">
+                    {% for job in recommended_jobs %}
+                        <div class="border-b border-gray-200 pb-4 cursor-pointer hover:bg-gray-50 rounded-lg p-3"
+                             onclick="window.location.href='{% url 'dashboard:job_detail' job.id %}'">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-12 w-12">
+                                    <img src="{% static 'images/Icons/image1.png' %}" alt="{{ job.title }} Image" class="h-full w-full object-cover rounded-lg">
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="font-semibold">{{ job.title }}</h3>
+                                    <p class="text-gray-600">{{ job.company }}</p>
+                                    <div class="flex items-center text-sm text-gray-500 mt-1">
+                                        <span class="mr-4">{{ job.location }}</span>
+                                        <span>${{ job.salary_min|floatformat:0 }} - ${{ job.salary_max|floatformat:0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-500">Update your profile and preferences to get personalized job recommendations.</p>
+                    <a href="{% url 'dashboard:update_preferences' %}" class="mt-4 inline-block bg-yellow-400 text-black px-6 py-2 rounded-lg hover:bg-yellow-500">Update Preferences</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{% url 'dashboard:job_search' %}" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <h3 class="font-bold mb-2">Find Jobs</h3>
+            <p class="text-gray-600">Search and filter jobs matching your skills</p>
+        </a>
+        <a href="{% url 'dashboard:update_preferences' %}" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <h3 class="font-bold mb-2">Update Preferences</h3>
+            <p class="text-gray-600">Customize your job search preferences</p>
+        </a>
+        <a href="{% url 'dashboard:my_applications' %}" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <h3 class="font-bold mb-2">View Applications</h3>
+            <p class="text-gray-600">Track your job application status</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

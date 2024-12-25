@@ -1,0 +1,411 @@
+{% extends 'Job/jobpagebase.html' %}
+
+{% comment %} # Ezekiel worked on this {% endcomment %}
+
+{% load static %}
+
+{% block title %}Hive Find Job Page{% endblock %}
+
+{% block content %}
+
+<!-- Search Boxes Section -->
+<section class="bg-white-100 py-3">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 justify-between items-center">
+        <form method="GET" class="w-full flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <!-- Find a Job -->
+            <div class="flex items-center bg-white rounded-xl shadow-md border-2 border-gray-600 p-3 w-full md:w-2/3">
+                <img src="{% static 'images/Icons/find.png' %}" alt="Finder Icon" class="h-6 w-6 mr-2">
+                <input type="text" name="q" value="{{ query }}" class="flex-grow bg-transparent outline-none text-gray-700" placeholder="Find a Job" aria-label="Find a Job">
+            </div>
+
+            <!-- Country/City -->
+            <div class="flex items-center bg-white rounded-xl border-2 border-gray-600 p-3 w-full md:w-1/3" style="border-radius:10px;">
+                <img src="{% static 'images/Icons/location.png' %}" alt="Location Icon" class="h-6 w-6 mr-2">
+                <input type="text" name="location" value="{{ location }}" class="flex-grow bg-transparent outline-none text-gray-700" placeholder="Country/City" aria-label="Country or City">
+            </div>
+
+            <!-- Experience Level -->
+            <div class="flex items-center bg-white rounded-xl border-2 border-gray-600 p-3 w-full md:w-1/3">
+                <img src="{% static 'images/Icons/bag.png' %}" alt="Experience Icon" class="h-6 w-6 mr-2">
+                <input type="text" name="experience" value="{{ experience }}" class="flex-grow bg-transparent outline-none text-gray-700" placeholder="Experience Level" aria-label="Experience Level">
+            </div>
+
+            <button type="submit" class="bg-yellow-300 text-black font-semibold py-2 px-4 rounded-xl hover:bg-yellow-400">
+                Search
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Job Listings Section -->
+<section class="pb-3">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+        <!-- Filters Section -->
+        <div class="relative bg-white rounded-lg p-6 w-full md:w-1/3" style="box-shadow: 10px 15px 15px -5px rgba(0, 0, 0, 0.1);">
+            <!-- Hamburger Icon -->
+            <div class="md:hidden flex items-center justify-between">
+                <h2 class="text-xl font-bold">Menu</h2>
+                <button id="menu-toggle" class="text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+    
+            <!-- Menu Content -->
+            <div id="menu-content" class="menu-content md:flex flex-col">
+                <div class="flex items-center bg-white-100 rounded-xl  border-2 border-gray-600 p-3 mb-5">
+                    <h6>Set Filter</h6>
+                </div>
+                <h2 class="text-xl font-bold mb-4">Sort By</h2>
+                <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mb-4">
+                    <button class="bg-yellow-300 text-black rounded-full px-4 py-2 text-sm md:text-base hover:bg-yellow-400 w-full md:w-auto">New</button>
+                    <button class="bg-white text-black border-2 border-gray-600 rounded-full px-4 py-2 text-xs md:text-base hover:bg-gray-100 w-full md:w-auto">Relevance</button>
+                </div>
+                <h6 class="font-bold mb-4 mt-5">Job Type</h6>
+                <div class="space-y-2 mb-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="job-type" value="full-time" checked class="custom-radio">
+                        <span class="ml-2 text-gray-700">Full time</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="job-type" value="internship" class="custom-radio">
+                        <span class="ml-2 text-gray-700">Internship</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="job-type" value="freelance" class="custom-radio">
+                        <span class="ml-2 text-gray-700">Freelance</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="job-type" value="volunteer" class="custom-radio">
+                        <span class="ml-2 text-gray-700">Volunteer</span>
+                    </label>
+                </div>
+                <div class="items-center mb-4 pricebar">
+                    <div class="flex mb-3">
+                      <h6 class="font-bold mb-2 flex-grow">Salary</h6>
+                      <div class="wrapper">
+                        <div class="price-input">
+                          <div class="field">
+                            <span class="input-min font-bold">$300</span>/<span class="font-bold">hr</span> - 
+                            <span class="input-max font-bold">$700</span class="font-bold">/<span class="font-bold">hr</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+
+                    <div class="slider">
+                      <div class="progress"></div>
+                    </div>
+                    
+                    <div class="range-input">
+                      <input type="range" class="range-min" min="0" max="1000" value="300" step="100">
+                      <input type="range" class="range-max" min="0" max="1000" value="700" step="100">
+                    </div>
+                  </div>
+                <h6 class="font-bold mb-4 mt-5">Remote / On-site</h6>
+                <div class="space-y-2 mb-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="remote-on-site" value="remote" checked class="custom-radio">
+                        <span class="ml-2 text-gray-700">Remote</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="remote-on-site" value="on-site" class="custom-radio">
+                        <span class="ml-2 text-gray-700">On-site</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="remote-on-site" value="hybrid" class="custom-radio">
+                        <span class="ml-2 text-gray-700">Hybrid</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="flex flex-col w-full md:w-3/6 space-y-1">
+            {% if recommended_jobs %}
+            <!-- Recommended Jobs Section -->
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-4">Recommended for You</h3>
+                {% for job in recommended_jobs %}
+                <div class="flex flex-col bg-white-200 rounded-xl border-2 border-zinc-600 p-6 mb-4">
+                    <div class="bg-white rounded-xl border-2 cursor-pointer border-zinc-950 p-2 mb-1 flex items-start job-card" data-job-id="{{ job.id }}">
+                        <div class="flex-shrink-0 h-16 w-16 mt-3">
+                            <img src="{% static 'images/Icons/image1.png' %}" alt="{{ job.title }} Image" class="h-full w-full object-cover rounded-lg">
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <h3 class="text-lg font-semibold">{{ job.title }}</h3>
+                            <p class="text-gray-600">{{ job.company }}</p>
+                            <div class="flex items-center text-sm text-gray-500 mt-2">
+                                <span class="mr-4">{{ job.location }}</span>
+                                <span class="mr-4">{{ job.job_type }}</span>
+                                <span>${{ job.salary_min|floatformat:0 }} - ${{ job.salary_max|floatformat:0 }}</span>
+                            </div>
+                        </div>
+                        {% if job.id in applied_jobs %}
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Applied</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- All Jobs Section -->
+            {% for job in jobs %}
+            <div class="flex flex-col bg-white-200 rounded-xl border-2 border-zinc-600 p-6">
+                <div class="bg-white rounded-xl border-2 cursor-pointer border-zinc-950 p-2 mb-1 flex items-start job-card" data-job-id="{{ job.id }}">
+                    <div class="flex-shrink-0 h-16 w-16 mt-3">
+                        <img src="{% static 'images/Icons/image1.png' %}" alt="{{ job.title }} Image" class="h-full w-full object-cover rounded-lg">
+                    </div>
+                    <div class="ml-4 flex-grow">
+                        <h3 class="text-lg font-semibold">{{ job.title }}</h3>
+                        <p class="text-gray-600">{{ job.company }}</p>
+                        <div class="flex items-center text-sm text-gray-500 mt-2">
+                            <span class="mr-4">{{ job.location }}</span>
+                            <span class="mr-4">{{ job.job_type }}</span>
+                            <span>${{ job.salary_min|floatformat:0 }} - ${{ job.salary_max|floatformat:0 }}</span>
+                        </div>
+                    </div>
+                    {% if job.id in applied_jobs %}
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Applied</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-8">
+                <p class="text-gray-500">No jobs found matching your criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Job Detail Modal -->
+<div id="jobDetailModal" class="modal">
+    <div class="modal-content">
+        <div id="jobDetailContent">
+            <!-- Job details will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Report Job Modal -->
+<div id="reportJobModal" class="modal">
+    <div class="modal-content">
+        <form id="reportJobForm" class="p-6">
+            <h2 class="text-2xl font-bold mb-4">Report Job</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="reason">
+                    Reason for reporting
+                </label>
+                <select id="reason" name="reason" class="w-full px-3 py-2 border rounded-lg" required>
+                    <option value="">Select a reason</option>
+                    <option value="spam">Spam or misleading</option>
+                    <option value="inappropriate">Inappropriate content</option>
+                    <option value="scam">Potential scam</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="additional_info">
+                    Additional Information
+                </label>
+                <textarea id="additional_info" name="additional_info" rows="4" class="w-full px-3 py-2 border rounded-lg"></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="mr-2 px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300" onclick="closeReportModal()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-yellow-400 text-black rounded-lg hover:bg-yellow-500">Submit Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Job Detail Modal
+function openJobModal(jobId) {
+    fetch(`/api/jobs/${jobId}/`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('jobDetailContent').innerHTML = `
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">${data.title}</h2>
+                    <div class="mb-4">
+                        <p class="text-gray-600">${data.company}</p>
+                        <div class="flex items-center text-sm text-gray-500 mt-2">
+                            <span class="mr-4">${data.location}</span>
+                            <span class="mr-4">${data.job_type}</span>
+                            <span>$${data.salary_min} - $${data.salary_max}</span>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="font-bold mb-2">Description</h3>
+                        <p class="text-gray-700">${data.description}</p>
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button onclick="reportJob(${jobId})" class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">Report</button>
+                        ${!data.has_applied ? `
+                            <button onclick="applyJob(${jobId})" class="px-4 py-2 bg-yellow-400 text-black rounded-lg hover:bg-yellow-500">Apply Now</button>
+                        ` : `
+                            <span class="px-4 py-2 bg-green-100 text-green-800 rounded-lg">Applied</span>
+                        `}
+                    </div>
+                </div>
+            `;
+            document.getElementById('jobDetailModal').style.display = 'block';
+        });
+}
+
+// Apply for Job
+function applyJob(jobId) {
+    fetch(`/jobs/${jobId}/apply/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    });
+}
+
+// Report Job
+function reportJob(jobId) {
+    document.getElementById('jobDetailModal').style.display = 'none';
+    document.getElementById('reportJobModal').style.display = 'block';
+    
+    document.getElementById('reportJobForm').onsubmit = function(e) {
+        e.preventDefault();
+        
+        fetch(`/jobs/${jobId}/report/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                reason: document.getElementById('reason').value,
+                additional_info: document.getElementById('additional_info').value,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                closeReportModal();
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        });
+    };
+}
+
+// Helper functions
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function closeJobModal() {
+    document.getElementById('jobDetailModal').style.display = 'none';
+}
+
+function closeReportModal() {
+    document.getElementById('reportJobModal').style.display = 'none';
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const jobCards = document.querySelectorAll('.job-card');
+    jobCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const jobId = this.dataset.jobId;
+            openJobModal(jobId);
+        });
+    });
+});
+</script>
+
+<!-- Modals JavaScript -->
+<script>
+    var modal = document.getElementById("myModal");// Get the modal 
+    var btn = document.getElementById("myBtn");// Get the button that opens the modal
+    btn.onclick = function() {
+      modal.style.display = "block";// When the user clicks the button, open the modal 
+    }
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";// When the user clicks anywhere outside of the modal, close it
+      }
+    }
+    var btn1 = document.getElementById("myBtn1");// Get the button that opens the modal
+    btn1.onclick = function() {
+      modal.style.display = "block";// When the user clicks the button, open the modal 
+    }
+
+    var modals = document.getElementById("ModalReport");
+    var report = document.getElementById("OnReport-click");
+    var span = document.getElementsByClassName("close")[0];
+    report.onclick = function() {
+      modals.style.display = "block";
+    }
+    span.onclick = function() {
+        modals.style.display = "none";
+      }
+</script>
+
+<!-- Manu JavaScript -->  
+<script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('menu-content').classList.toggle('open');
+    });
+</script>
+<!-- price bar-->
+<script>
+    const rangeMin = document.querySelector(".range-min");
+    const rangeMax = document.querySelector(".range-max");
+    const inputMin = document.querySelector(".input-min");
+    const inputMax = document.querySelector(".input-max");
+    const progress = document.querySelector(".progress");
+    
+    rangeMin.addEventListener("input", () => {
+      inputMin.textContent = rangeMin.value;
+      updateProgress();
+    });
+    
+    rangeMax.addEventListener("input", () => {
+      inputMax.textContent = rangeMax.value;
+      updateProgress();
+    });
+    
+    function updateProgress() {
+      const min = rangeMin.value;
+      const max = rangeMax.value;
+      const minPercent = (min / rangeMin.max) * 100;
+      const maxPercent = (max / rangeMax.max) * 100;
+    
+      progress.style.left = minPercent + "%";
+      progress.style.right = (100 - maxPercent) + "%";
+    }
+    
+    updateProgress();
+</script>
+
+{% endblock %}

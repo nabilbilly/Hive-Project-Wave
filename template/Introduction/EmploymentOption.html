@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employment Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .selected {
+            background-color: #FFC22666 !important;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Logo Section -->
+    <div class="flex items-start pt-6 mb-6 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-20">
+        <a href="#"> <img src="{% static 'images/logo/CashHivelogo.png' %}" alt="Hive Logo" class="h-10 mr-3"> </a>
+    </div>
+    
+    <div class="bg-white flex items-center justify-center">
+        <div class="w-full max-w-3xl mb-8 p-6">
+            <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">What type of employment are you looking for?</h2>
+        </div> 
+    </div> 
+   
+    <div class="flex flex-col items-center pb-10 px-4 sm:px-8 lg:px-32 bg-white">
+        <!-- Step-by-step Sidebar -->
+        <div class="flex items-start w-full lg:justify-between">
+            <div class="hidden lg:flex flex-col items-center mr-6">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 border-2 border-black rounded-full flex items-center justify-center" style="background:#FDCE02">
+                        <span class="text-black font-lg text-sm">1/9</span>
+                    </div>
+                    <div class="border-l-2 border-gray-300 border-dashed h-12 w-0.5"></div>
+                </div>
+            </div>
+            
+            <!-- Employment Options -->
+            <div class="flex-1 max-w-2xl">
+                <form id="employmentForm" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="step" value="employment">
+                    <div class="category-btn cursor-pointer p-4 border rounded-lg hover:border-yellow-400 transition-all duration-200"
+                         data-value="full-time">
+                        <h3 class="font-semibold">Full Time</h3>
+                        <p class="text-sm text-gray-600">40 hours per week, regular schedule</p>
+                    </div>
+                    
+                    <div class="category-btn cursor-pointer p-4 border rounded-lg hover:border-yellow-400 transition-all duration-200"
+                         data-value="part-time">
+                        <h3 class="font-semibold">Part Time</h3>
+                        <p class="text-sm text-gray-600">Less than 40 hours per week, flexible schedule</p>
+                    </div>
+                    
+                    <div class="category-btn cursor-pointer p-4 border rounded-lg hover:border-yellow-400 transition-all duration-200"
+                         data-value="contract">
+                        <h3 class="font-semibold">Contract</h3>
+                        <p class="text-sm text-gray-600">Project-based work with defined timeline</p>
+                    </div>
+                    
+                    <div class="category-btn cursor-pointer p-4 border rounded-lg hover:border-yellow-400 transition-all duration-200"
+                         data-value="internship">
+                        <h3 class="font-semibold">Internship</h3>
+                        <p class="text-sm text-gray-600">Learning opportunity with hands-on experience</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="bg-white flex items-center justify-center space-x-7 mt-8">
+            <a href="{% url 'Location-Of-Work' %}">
+                <button class="bg-gray-300 text-gray-700 hover:text-gray-800 font-md px-4 py-2 rounded-md w-30">Back</button>
+            </a>
+            <button id="continueBtn" class="text-gray-700 font-md px-4 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-md w-30" 
+                    style="background:#FDCE02" disabled>Continue</button>
+        </div>
+    </div>
+
+    <script>
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const continueBtn = document.getElementById('continueBtn');
+        let selectedValue = null;
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove selected class from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('selected'));
+                // Add selected class to clicked button
+                this.classList.add('selected');
+                selectedValue = this.dataset.value;
+                continueBtn.disabled = false;
+            });
+        });
+
+        continueBtn.addEventListener('click', async function() {
+            if (!selectedValue) return;
+
+            const form = document.getElementById('employmentForm');
+            const formData = new FormData(form);
+            formData.append('employment_type', selectedValue);
+
+            try {
+                // Save to local storage
+                localStorage.setItem('employment_type', selectedValue);
+                // Redirect to next step
+                window.location.href = "{% url 'Job-List-Type' %}";
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        // Load saved value if exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedValue = localStorage.getItem('employment_type');
+            if (savedValue) {
+                const button = document.querySelector(`[data-value="${savedValue}"]`);
+                if (button) {
+                    button.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

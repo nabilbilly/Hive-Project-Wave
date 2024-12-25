@@ -1,0 +1,74 @@
+{% extends 'Donate/donatebase.html' %}
+
+{% comment %} # Theo worked on this  {% endcomment %}
+
+{% load static %}
+{% block title %}Hive Donate page{% endblock %}
+
+{% block content %}
+        <div class="relative bg-cover bg-center h-screen" style="background-image: url('{% static './images/Donate/bg.png' %}');">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black opacity-75"></div>
+    
+    <!-- Content -->
+    <div class="h-full flex flex-col justify-center items-center relative z-10 container mx-auto px-6 py-40 text-white text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">Empower Job Seekers Today</h1>
+        <p class=" w-4/6 text-lg md:text-2xl mb-8">Support Hive in bridging the gap between job seekers and employers. Your donations fund job training, career counseling, and technology access, empowering individuals and strengthening communities. <br><br> Donate now to make a difference.</p>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+<!-- Modal -->
+<div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+  <div class="bg-white p-6 rounded shadow-lg">
+    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
+      <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg leading-6 font-medium text-gray-900">Join Hive</h3>
+    <div class="mt-2 px-7 py-3">
+      <p class="text-sm text-gray-500">
+        Sign up to access job opportunities and find your perfect match!
+      </p>
+    </div>
+    <div class="items-center px-4 py-3">
+      <button id="closeModal"
+        class="px-4 py-2 bg-yellow-500 text-white text-base font-medium rounded-md w-5/12 shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById("confirmModal");
+        var btn = document.getElementById("openModal");
+        var span = document.getElementById("closeModal");
+
+        btn.onclick = function() {
+            {% if user.is_authenticated %}
+                window.location.href = "{% url 'dashboard:job_view' %}";
+            {% else %}
+                modal.classList.remove('hidden');
+            {% endif %}
+        }
+
+        span.onclick = function() {
+            modal.classList.add('hidden');
+            window.location.href = "{% url 'accounts:SignUp' %}";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.classList.add('hidden');
+            }
+        }
+    });
+</script>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hive Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'src/css/talent_page.css'%}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+    
+</head>
+<body>
+     <!-- Navigation -->
+     <header class="bg-white bottom-border" style="border-bottom: 2px solid black;">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center ">
+                <a href="{% url 'Talent-page' %}"> <img src="{% static 'images/logo/CashHivelogo.png' %}" alt="Hive Logo" class=" logo" style="margin-right:10px,min-width: 85px;min-height: 40px;width: 85px;height: 40px;"> </a>
+                
+            </div>
+            <div class="flex items-center space-x-3 ">
+                <nav class="hidden items-center md:flex space-x-4 lg:space-x-12 mr-8 pl-2 ">
+
+                    <a href="{% url 'Talent-page' %}" class="text-black font-semibold " 
+                        style="text-decoration: none; position: relative; display: inline-block; transition: all 0.3s ease;"
+                        onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; this.style.padding='10px 20px 10px 20px'; this.style.borderRadius='10px'; this.style.opacity='1';"
+                        onmouseout="this.style.color='black'; this.style.backgroundColor='transparent'; this.style.padding='0'; this.style.borderRadius='0'; this.style.opacity='1';">
+                        For&nbsp;Talents
+                    </a>
+
+                    <a href="{% url 'DevCommunity-page' %}" class="text-black font-semibold " 
+                        style="text-decoration: none; position: relative; display: inline-block; transition: all 0.3s ease;"
+                        onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; this.style.padding='10px 20px 10px 20px'; this.style.borderRadius='10px'; this.style.opacity='1';"
+                        onmouseout="this.style.color='black'; this.style.backgroundColor='transparent'; this.style.padding='0'; this.style.borderRadius='0'; this.style.opacity='1';">
+                        Dev&nbsp;community
+                    </a>
+
+                    <a href="{% url 'About_us-page' %}" class="text-black font-semibold " 
+                        style="text-decoration: none; position: relative; display: inline-block; transition: all 0.3s ease;"
+                        onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; this.style.padding='10px 20px 10px 20px'; this.style.borderRadius='10px'; this.style.opacity='1';"
+                        onmouseout="this.style.color='black'; this.style.backgroundColor='transparent'; this.style.padding='0'; this.style.borderRadius='0'; this.style.opacity='1';">
+                        AboutUs
+                    </a>
+
+                    <a href="{% url 'Employers-Page' %}" class="text-black font-semibold " 
+                        style="text-decoration: none; position: relative; display: inline-block; transition: all 0.3s ease;"
+                        onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; this.style.padding='10px 20px 10px 20px'; this.style.borderRadius='10px'; this.style.opacity='1';"
+                        onmouseout="this.style.color='black'; this.style.backgroundColor='transparent'; this.style.padding='0'; this.style.borderRadius='0'; this.style.opacity='1';">
+                            Employers
+                    </a>
+                </nav>            
+                    
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'accounts:Login'%}" class=" bg-white text-black font-semibold  hover:text-black" style="text-decoration: none;padding:10px 20px 10px 20px;border-radius:10px;box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);">Log&nbsp;in</a>
+                        <a href="{% url 'accounts:SignUp' %}" class=" text-black font-semibold  hover:bg-yellow-600" style="text-decoration: none; background:#FDCE02;padding:10px 20px 10px 20px;border-radius:10px;"
+                         onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; "  onmouseout="this.style.color='black'; this.style.backgroundColor='#FDCE02';">
+                         Sign&nbsp;up
+                        </a>
+                    {% else %}
+                        <form method="post" action="{% url 'accounts:LogoutUser' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-black font-semibold hover:bg-yellow-600" style="text-decoration: none; background:#FDCE02;padding:10px 20px 10px 20px;border-radius:10px;">
+                                Log&nbsp;out
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu hidden md:hidden">
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard:job_view' %}" class="block py-2 px-4 text-sm hover:bg-gray-100">Dashboard</a>
+            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">Profile</a>
+            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">Settings</a>
+            <form method="post" action="{% url 'accounts:LogoutUser' %}" class="w-full">
+                {% csrf_token %}
+                <button type="submit" class="block w-full text-left py-2 px-4 text-sm hover:bg-gray-100">Log Out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'accounts:Login' %}" class="block py-2 px-4 text-sm hover:bg-gray-100">Login</a>
+            <a href="{% url 'accounts:SignUp' %}" class="block py-2 px-4 text-sm hover:bg-gray-100">Sign Up</a>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile dropdown toggle
+            const profileButton = document.querySelector('.profile-button');
+            const profileDropdown = document.querySelector('.profile-dropdown');
+            
+            if (profileButton && profileDropdown) {
+                profileButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    profileDropdown.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-white py-8 mt-12 shadow-inner">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-700">Hive</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li><a href="{% url 'Talent-page' %}" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">For Talents</a></li>
+                        <li><a href="{% url 'Employers-Page' %}" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">Employers</a></li>
+                        <li class="flex items-center">
+                            <img src="{% static 'images/logo/new11.png' %}" alt="Raven Logo" class="h-6 w-6 mr-2">
+                            <a href="#" class="text-gray-600 " style="text-decoration: none;">Raven</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-700"style="text-decoration: none;">About Us</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500"style="text-decoration: none;">Careers (Become an ambassador)</a></li>
+                        <li><a href="{% url 'About_us-page' %}" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">Know Us</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">FAQ</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">Terms of service</a></li>
+                        <li class="mb-3"><a href="#" class="text-gray-600 hover:text-yellow-500 " style="text-decoration: none;">Privacy and policies</a></li>
+                        <li><a href="{% url 'Donate-Page'%}" class=" text-black font-semibold  " style="text-decoration: none; background:#FDCE02;padding:5px 15px 10px 15px;border-radius:8px;"
+                                onmouseover="this.style.color='black'; this.style.backgroundColor='#FDCE02'; "  onmouseout="this.style.color='black'; this.style.backgroundColor='#FDCE02';">
+                                Donate
+                            </a>
+                        </li>
+                        {% comment %} <li><a href="{% url 'Donate-Page'%}" class="text-gray-600 hover:text-yellow-500">Donate</a></li>
+                    </ul> {% endcomment %}
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-700" style="text-decoration: none;">Community</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li><a href="{% url 'DevCommunity-page' %}" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">Dev community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-700" style="text-decoration: none;">Join us, let’s socialize</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">LinkedIn</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">YouTube</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">GitHub</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">Facebook</a></li>
+                        <li><a href="mailto:hell@hive.community" class="text-gray-600 hover:text-yellow-500" style="text-decoration: none;">teamhive@hivenetwork.xyz</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+  
+</body>
+</html>
